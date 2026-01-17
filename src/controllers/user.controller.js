@@ -74,6 +74,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     const requiredErrors = validateRequired(["email", "password"]);
     if (requiredErrors.length > 0) {
       return res.staus(400).json({
