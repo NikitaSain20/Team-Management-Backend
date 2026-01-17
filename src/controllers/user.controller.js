@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
-const Secret = "nikita!23@";
+
 import {
   validateEmail,
   validateRequired,
@@ -9,7 +9,7 @@ import {
 } from "../utils/validation.js";
 
 const generateToken = (id) => {
-  return jwt.sign({ id }, Secret, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
 };
@@ -74,10 +74,9 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    const requiredErrors = validateRequired(["email", "password"]);
+    const requiredErrors = validateRequired(["email", "password"], req.body);
     if (requiredErrors.length > 0) {
-      return res.staus(400).json({
+      return res.status(400).json({
         success: false,
         message: requiredErrors.join("."),
       });
