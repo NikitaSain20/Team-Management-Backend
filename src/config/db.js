@@ -1,14 +1,12 @@
 import mongoose from "mongoose";
-// const MONGO_URI =
-//   "mongodb+srv://nikitasen664_db_user:W0bk7qjkmfjVVDG3@cluster0.eq9obrj.mongodb.net/Team-management?appName=Cluster0";
 import "dotenv/config";
-const dbConnection = async () => {
+export const connectDB = async () => {
+  console.log("process.env.MONGO_URI", process.env.MONGO_URI);
   try {
-    const con = await mongoose.connect(process.env.MONGO_URI);
-    console.log("Db Connected Successfully");
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    console.log("Mongo DB connected");
   } catch (error) {
-    console.log("Error in connecting the database", error);
+    console.log("Error while connecting DB", error);
+    process.exit(1);
   }
 };
-
-export default dbConnection;

@@ -1,12 +1,27 @@
 import express from "express";
 import cors from "cors";
 
-import authRoutes from "../src/routes/user.routes.js";
+import { errorHandler } from "./middleware/errorHandler.middleware.js";
+// Import routes
+import authRoutes from "./routes/user.route.js";
+import teamRoutes from "./routes/team.route.js";
+import taskRoutes from "./routes/task.route.js";
+import commentRoutes from "./routes/comment.route.js";
+
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/teams", teamRoutes);
+app.use("/api/teams/:teamId/tasks", taskRoutes);
+app.use("/api/teams/:teamId/tasks/:taskId/comments", commentRoutes);
+
+// Health check route
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
@@ -14,10 +29,15 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    meassge: "route not found",
+    message: "Route not found",
   });
 });
+
+// Error handler (must be last)
+app.use(errorHandler);
+
 export default app;
